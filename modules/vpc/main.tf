@@ -4,7 +4,7 @@
 
 # create the VPC
 resource "aws_vpc" "devo_vpc" {
-  cidr_block       = "${var.vpc_cidr}"
+  cidr_block           = "${var.vpc_cidr}"
   enable_dns_support   = "${var.enable_dns_support}"
   enable_dns_hostnames = "${var.enable_dns_hostnames}"
 }
@@ -33,7 +33,7 @@ resource "aws_default_network_acl" "default" {
   tags = "${merge(
     var.common_tags,
     map(
-     "Name" ,"${var.project_name_prefix}-default-network-acl"
+     "Name" ,"${var.project_name}-default-network-acl"
       )
   )}"
 
@@ -44,7 +44,7 @@ resource "aws_default_network_acl" "default" {
 }
 module "subnets" {
   source              = "./subnets/"
-  project_name_prefix = "${var.project_name_prefix}"
+  project_name        = "${var.project_name}"
   common_tags         = "${var.common_tags}"
   vpc_id              = "${aws_vpc.devo_vpc.id}"
   public_subnets      = "${var.public_subnets}"
@@ -52,13 +52,10 @@ module "subnets" {
 }
 
 resource "aws_eip" "nat_gateway_eip" {
-  # count = "${local.nat_gateway_count * var.create_nat_gateway_eip}"
-  # vpc   = true
-
   tags = "${merge(
     var.common_tags,
     map(
-      "Name" ,"${var.project_name_prefix}"
+      "Name" ,"${var.project_name}"
       )
   )}"
 
@@ -66,7 +63,7 @@ resource "aws_eip" "nat_gateway_eip" {
 }
 module "nat_gateway" {
   source                      = "./nat-gateway/"
-  project_name_prefix         = "${var.project_name_prefix}"
+  project_name                = "${var.project_name}"
   common_tags                 = "${var.common_tags}"
   public_subnet_ids           = "${module.subnets.public_subnet_ids}"
   nat_gateways_allocation_ids = "${aws_eip.nat_gateway_eip.*.id}"

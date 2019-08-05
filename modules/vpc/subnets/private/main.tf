@@ -7,7 +7,7 @@ resource "aws_subnet" "app_private_subnets" {
   tags = "${merge(
     var.common_tags,
     map(
-     "Name" ,"PrivateSubnet"
+     "Name" ,"locusPrivateSubnet"
       )
   )}"
 }

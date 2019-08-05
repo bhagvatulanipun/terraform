@@ -5,16 +5,10 @@ resource "aws_subnet" "public_subnets" {
   map_public_ip_on_launch = true
   availability_zone       = "${lookup(var.public_subnets[count.index], "az")}"
 
-  # tags = "${merge(
-  #   var.common_tags,
-  #   map(
-  #    "Name" ,"${var.project_name_prefix}-public-${count.index + 1}"
-  #     )
-  # )}"
   tags = "${merge(
     var.common_tags,
     map(
-     "Name" ,"ReplicaGaadiPublicSubnetZoneA-${count.index + 1}"
+     "Name" ,"locusPublicSubnet-${count.index + 1}"
       )
   )}"
 }
@@ -22,16 +16,10 @@ resource "aws_subnet" "public_subnets" {
 resource "aws_internet_gateway" "gw" {
   vpc_id = "${var.vpc_id}"
 
-  # tags = "${merge(
-  #   var.common_tags,
-  #   map(
-  #    "Name" ,"${var.project_name_prefix}"
-  #     )
-  # )}"
   tags = "${merge(
     var.common_tags,
     map(
-     "Name" ,"Replica-Gaadi-igw"
+     "Name" ,"locus-igw"
       )
   )}"
 }
@@ -39,16 +27,10 @@ resource "aws_internet_gateway" "gw" {
 resource "aws_route_table" "public_route_table" {
   vpc_id = "${var.vpc_id}"
 
-  # tags = "${merge(
-  #   var.common_tags,
-  #   map(
-  #    "Name" ,"${var.project_name_prefix}-public"
-  #     )
-  # )}"
   tags = "${merge(
     var.common_tags,
     map(
-     "Name" ,"Replica Gaadi Route Table"
+     "Name" ,"locus Route Table"
       )
   )}"
 }
